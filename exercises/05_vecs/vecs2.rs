@@ -6,6 +6,7 @@ fn vec_loop(input: &[i32]) -> Vec<i32> {
         // the `output` vector.
     }
 
+    output.extend(input.iter().map(|&x| x * 2));
     output
 }
 
@@ -25,6 +26,7 @@ fn vec_map(input: &[i32]) -> Vec<i32> {
         .iter()
         .map(|element| {
             // ???
+            element * 2
         })
         .collect()
 }
