@@ -31,6 +31,72 @@ fn build_scores_table(results: &str) -> HashMap<&str, TeamScores> {
         // Keep in mind that goals scored by team 1 will be the number of goals
         // conceded by team 2. Similarly, goals scored by team 2 will be the
         // number of goals conceded by team 1.
+
+        if !scores.contains_key(team_1_name) && !scores.contains_key(team_2_name) {
+            scores.insert(
+                team_2_name,
+                TeamScores {
+                    goals_scored: team_2_score,
+
+                    goals_conceded: team_1_score,
+                },
+            );
+            scores.insert(
+                team_1_name,
+                TeamScores {
+                    goals_scored: team_1_score,
+
+                    goals_conceded: team_2_score,
+                },
+            );
+        } else if scores.contains_key(team_1_name) && !scores.contains_key(team_2_name) {
+            scores.insert(
+                team_2_name,
+                TeamScores {
+                    goals_scored: team_2_score,
+                    goals_conceded: team_1_score,
+                },
+            );
+
+            let score_1 = scores.get_key_value(team_1_name).unwrap().1;
+            let new_score_1 = TeamScores {
+                goals_scored: (*score_1).goals_scored + team_1_score,
+                goals_conceded: (*score_1).goals_conceded + team_2_score,
+            };
+            scores.insert(team_1_name, new_score_1);
+        } else if scores.contains_key(team_2_name) && !scores.contains_key(team_1_name) {
+            scores.insert(
+                team_1_name,
+                TeamScores {
+                    goals_scored: team_1_score,
+
+                    goals_conceded: team_2_score,
+                },
+            );
+
+            let score_2 = scores.get_key_value(team_2_name).unwrap().1;
+            let new_score_2 = TeamScores {
+                goals_scored: (*score_2).goals_scored + team_2_score,
+                goals_conceded: (*score_2).goals_conceded + team_1_score,
+            };
+            scores.insert(team_2_name, new_score_2);
+        } else {
+            let score_1 = scores.get_key_value(team_1_name).unwrap().1;
+            let new_score_1 = TeamScores {
+                goals_scored: (*score_1).goals_scored + team_1_score,
+
+                goals_conceded: (*score_1).goals_conceded + team_2_score,
+            };
+
+            let score_2 = scores.get_key_value(team_2_name).unwrap().1;
+            let new_score_2 = TeamScores {
+                goals_scored: (*score_2).goals_scored + team_2_score,
+                goals_conceded: (*score_2).goals_conceded + team_1_score,
+            };
+
+            scores.insert(team_1_name, new_score_1);
+            scores.insert(team_2_name, new_score_2);
+        }
     }
 
     scores
